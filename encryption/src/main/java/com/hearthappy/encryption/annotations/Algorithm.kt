@@ -1,9 +1,6 @@
 package com.hearthappy.encryption.annotations
 
 import androidx.annotation.StringDef
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * Created Date 2020/12/4.
@@ -12,8 +9,7 @@ import java.lang.annotation.RetentionPolicy
  * ClassDescription:算法
  */
 
-@Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.VALUE_PARAMETER,
