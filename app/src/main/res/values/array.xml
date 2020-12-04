@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="algorithm">
+        <item>AES</item>
+        <item>DES</item>
+    </string-array>
+
+    <string-array name="EncryptionMode">
+        <item>CBC</item>
+        <item>ECB</item>
+        <item>CTR</item>
+        <item>OFB</item>
+        <item>CFB</item>
+    </string-array>
+
+    <string-array name="filling">
+        <item>PKCS5PADDING</item>
+        <item>PKCS7PADDING</item>
+        <item>NoPadding</item>
+    </string-array>
+
+    <string-array name="offset">
+        <item>无</item>
+        <item>偏移16位</item>
+        <item>偏移32位</item>
+    </string-array>
+
+    <string-array name="output">
+        <item>base64</item>
+        <item>hex</item>
+    </string-array>
+
+    <string-array name="CharacterSet">
+        <item>UTF-8</item>
+        <item>ISO_8859_1</item>
+        <item>ISO10126Padding</item>
+    </string-array>
+</resources>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    app:layoutDescription="@xml/activity_main_scene"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/llAlgorithm"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/style_title"
+            android:text="算法:" />
+
+        <Spinner
+            android:id="@+id/spAlgorithm"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:entries="@array/algorithm" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llEncryptionMode"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llAlgorithm">
+
+        <TextView
+            style="@style/style_title"
+            android:text="模式:" />
+
+        <Spinner
+            android:id="@+id/spEncryptionMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/EncryptionMode" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFilling"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llEncryptionMode">
+
+        <TextView
+            style="@style/style_title"
+            android:text="填充:" />
+
+        <Spinner
+            android:id="@+id/spFilling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/filling" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOffset"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFilling">
+
+        <TextView
+            style="@style/style_title"
+            android:text="偏移量:" />
+
+        <Spinner
+            android:id="@+id/spOffset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/offset" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOutput"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llOffset">
+
+        <TextView
+            style="@style/style_title"
+            android:text="输出:" />
+
+        <Spinner
+            android:id="@+id/spOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/output" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llCharacterSet"
+        style="@style/style_ll_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llOutput">
+
+        <TextView
+            style="@style/style_title"
+            android:text="字符集:" />
+
+        <Spinner
+            android:id="@+id/spCharacterSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/CharacterSet" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/etKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入密钥"
+        app:layout_constraintTop_toBottomOf="@+id/llCharacterSet" />
+
+
+    <EditText
+        android:id="@+id/etContent"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="请输入加密或解密内容"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etKey" />
+
+    <LinearLayout
+        android:id="@+id/llBtnStartAlgorithm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/etContent"
+        tools:layout_editor_absoluteX="8dp">
+
+        <Button
+            android:id="@+id/btnEncoded"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_result"
+            android:text="加密" />
+
+        <Button
+            android:id="@+id/btnDecode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_result"
+            android:text="解密" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_result"
+        android:padding="4dp"
+        android:text="输出结果："
+        android:textColor="@color/colorPrimary"
+        android:textIsSelectable="true"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/llBtnStartAlgorithm"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <ImageView
+        android:id="@+id/ivSlide"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_slide"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

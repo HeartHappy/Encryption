@@ -1,0 +1,3 @@
+include ':encryption'
+include ':app'
+rootProject.name = "Encryption"

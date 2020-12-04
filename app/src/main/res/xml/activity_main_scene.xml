@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="2000">
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/tvResult" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/tvResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            motion:layout_constraintTop_toBottomOf="@+id/llBtnStartAlgorithm" />
+        <Constraint
+            android:id="@+id/etContent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/etKey"
+            motion:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/etContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/etKey"
+            motion:layout_editor_absoluteX="7dp"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/etKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/llCharacterSet"
+            android:alpha="0" />
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_editor_absoluteX="8dp"
+            motion:layout_constraintTop_toTopOf="@+id/etKey"
+            android:layout_width="match_parent"
+            android:id="@+id/llBtnStartAlgorithm" />
+    </ConstraintSet>
+</MotionScene>
