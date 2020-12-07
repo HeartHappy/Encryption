@@ -9,7 +9,10 @@ import androidx.annotation.StringDef
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FIELD)
-@StringDef(Output.BASE64, Output.HEX)
+@StringDef(
+    Output.BASE64,
+    Output.HEX
+)
 annotation class Output {
     companion object {
         const val BASE64 = "base64"

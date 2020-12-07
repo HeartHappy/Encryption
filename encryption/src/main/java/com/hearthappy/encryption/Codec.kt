@@ -45,12 +45,12 @@ class Codec {
             @CharacterSet
             characterSet: String
         ): Companion {
-            this.algorithm = algorithm
-            this.encryptionMode = encryptionMode
-            this.filling = filling
-            this.offset = offset
-            this.output = output
-            this.characterSet = characterSet
+            Companion.algorithm = algorithm
+            Companion.encryptionMode = encryptionMode
+            Companion.filling = filling
+            Companion.offset = offset
+            Companion.output = output
+            Companion.characterSet = characterSet
             return this
         }
 
@@ -59,12 +59,16 @@ class Codec {
             try {
                 //iv:偏移量
                 val iv = if (offset != Offset.default) {
-                    IvParameterSpec(offset(offset).toByteArray(Charset.forName(CharacterSet.UTF_8)))
+                    IvParameterSpec(
+                        offset(
+                            offset
+                        ).toByteArray(Charset.forName(CharacterSet.UTF_8)))
                 } else {
                     null
                 }
                 //通过工厂生成key
-                val keyFactory = generateKey(key)
+                val keyFactory =
+                    generateKey(key)
                 val cipher = Cipher.getInstance("$algorithm/$encryptionMode/$filling")
                 iv?.let {
                     cipher.init(Cipher.ENCRYPT_MODE, keyFactory, iv)
@@ -72,7 +76,9 @@ class Codec {
                     cipher.init(Cipher.ENCRYPT_MODE, keyFactory)
                 }
                 if (output == Output.BASE64) {
-                    return encodeBase64ToString(cipher.doFinal(password.toByteArray()))
+                    return encodeBase64ToString(
+                        cipher.doFinal(password.toByteArray())
+                    )
                 }
                 return String(Hex.encodeHex(cipher.doFinal(password.toByteArray())))
             } catch (ex: Exception) {
@@ -84,10 +90,14 @@ class Codec {
         fun decode(@NotNull key: String, @NotNull encrypted: String): String? {
             try {
                 var iv: IvParameterSpec? = null
-                val keySpec = generateKey(key)
+                val keySpec =
+                    generateKey(key)
                 if (offset != Offset.default) {
                     iv =
-                        IvParameterSpec(offset(offset).toByteArray(Charset.forName(CharacterSet.UTF_8)))
+                        IvParameterSpec(
+                            offset(
+                                offset
+                            ).toByteArray(Charset.forName(CharacterSet.UTF_8)))
                 }
 
                 val cipher = Cipher.getInstance("$algorithm/$encryptionMode/$filling")
@@ -98,7 +108,11 @@ class Codec {
                     cipher.init(Cipher.DECRYPT_MODE, keySpec)
                 }
                 if (output == Output.BASE64) {
-                    return String(cipher.doFinal(decodeBase64ToBytes(encrypted)))
+                    return String(cipher.doFinal(
+                        decodeBase64ToBytes(
+                            encrypted
+                        )
+                    ))
                 }
                 return String(cipher.doFinal(Hex.decodeHex(encrypted.toCharArray())))
             } catch (ex: Exception) {
