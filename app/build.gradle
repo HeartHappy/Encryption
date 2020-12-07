@@ -27,6 +27,7 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
 }
 repositories {
     mavenCentral()
@@ -47,4 +48,7 @@ dependencies {
     implementation 'com.github.HeartHappy:rdp:1.0.3'
     implementation project(path: ':encryption')
 
+
 }
+
+
