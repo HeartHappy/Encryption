@@ -23,11 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
+    /*sourceSets {
         main.java.srcDirs += 'src/main/java'
 //        androidTest.java.srcDirs += 'src/androidTest/kotlin'
 //        androidTest.resources.srcDirs += 'src/androidTest/res'
-    }
+    }*/
 }
 
 dependencies {
@@ -42,6 +42,7 @@ dependencies {
 }
 
 
+/*
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.sourceFiles
@@ -65,4 +66,4 @@ artifacts {
     archives classesJar
     archives javadocJar
     archives sourcesJar
-}
+}*/
