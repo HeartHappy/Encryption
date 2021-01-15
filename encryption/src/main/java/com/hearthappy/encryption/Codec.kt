@@ -6,6 +6,8 @@ import org.apache.commons.codec.binary.Hex
 import org.jetbrains.annotations.NotNull
 import java.nio.charset.Charset
 import java.security.Key
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
@@ -55,14 +57,15 @@ class Codec {
         }
 
         @JvmStatic
-        fun encode(@NotNull key: String, @NotNull password: String): String? {
+        fun encode(@NotNull key: String, @NotNull password: String): String {
             try {
                 //iv:偏移量
                 val iv = if (offset != Offset.default) {
                     IvParameterSpec(
                         offset(
                             offset
-                        ).toByteArray(Charset.forName(CharacterSet.UTF_8)))
+                        ).toByteArray(Charset.forName(CharacterSet.UTF_8))
+                    )
                 } else {
                     null
                 }
@@ -87,7 +90,7 @@ class Codec {
         }
 
         @JvmStatic
-        fun decode(@NotNull key: String, @NotNull encrypted: String): String? {
+        fun decode(@NotNull key: String, @NotNull encrypted: String): String {
             try {
                 var iv: IvParameterSpec? = null
                 val keySpec =
@@ -97,7 +100,8 @@ class Codec {
                         IvParameterSpec(
                             offset(
                                 offset
-                            ).toByteArray(Charset.forName(CharacterSet.UTF_8)))
+                            ).toByteArray(Charset.forName(CharacterSet.UTF_8))
+                        )
                 }
 
                 val cipher = Cipher.getInstance("$algorithm/$encryptionMode/$filling")
@@ -108,11 +112,13 @@ class Codec {
                     cipher.init(Cipher.DECRYPT_MODE, keySpec)
                 }
                 if (output == Output.BASE64) {
-                    return String(cipher.doFinal(
-                        decodeBase64ToBytes(
-                            encrypted
+                    return String(
+                        cipher.doFinal(
+                            decodeBase64ToBytes(
+                                encrypted
+                            )
                         )
-                    ))
+                    )
                 }
                 return String(cipher.doFinal(Hex.decodeHex(encrypted.toCharArray())))
             } catch (ex: Exception) {
@@ -172,6 +178,33 @@ class Codec {
                     )
                 }
             }
+        }
+
+
+        fun md5Encryption(text: String): String {
+            try {
+                //获取md5加密对象
+                val instance: MessageDigest = MessageDigest.getInstance("MD5")
+                //对字符串加密，返回字节数组
+                val digest: ByteArray = instance.digest(text.toByteArray())
+                val sb = StringBuffer()
+                for (b in digest) {
+                    //获取低八位有效值
+                    val i: Int = b.toInt() and 0xff
+                    //将整数转化为16进制
+                    var hexString = Integer.toHexString(i)
+                    if (hexString.length < 2) {
+                        //如果是一位的话，补0
+                        hexString = "0" + hexString
+                    }
+                    sb.append(hexString)
+                }
+                return sb.toString()
+
+            } catch (e: NoSuchAlgorithmException) {
+                e.printStackTrace()
+            }
+            return ""
         }
     }
 }

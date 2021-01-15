@@ -8,7 +8,6 @@ import androidx.annotation.StringDef
  * @author ChenRui
  * ClassDescription:算法
  */
-
 @Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.ANNOTATION_CLASS,
@@ -18,11 +17,13 @@ import androidx.annotation.StringDef
 )
 @StringDef(
     Algorithm.AES,
-    Algorithm.DES
+    Algorithm.DES,
+    Algorithm.MD5
 )
 annotation class Algorithm {
     companion object {
         const val AES = "AES"
         const val DES = "DES"
+        const val MD5="MD5"
     }
 }

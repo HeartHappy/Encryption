@@ -1,17 +1,17 @@
 package com.hearthappy.encryption
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.hearthappy.encryption.annotations.*
+import com.hearthappy.encryption.annotations.Offset
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         btnEncoded.setOnClickListener {
             val content = etContent.text.toString()
             val key = etKey.text.toString()
@@ -69,19 +69,4 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun test() {
-        val decode = Codec.config(
-            Algorithm.AES,
-            EncryptionMode.CBC,
-            Filling.PKCS5PADDING,
-            Offset._16,
-            Output.HEX,
-            CharacterSet.UTF_8
-        )
-            .decode("vesystem", "lK9XS+3rVFWHQxh2O6JjUw==")
-        Log.d("MainActivity", "onCreate decode: $decode")
-
-        val encode = Codec.encode("0123456789012345", "123456")
-        Log.d("MainActivity", "onCreate encode: $encode")
-    }
 }
