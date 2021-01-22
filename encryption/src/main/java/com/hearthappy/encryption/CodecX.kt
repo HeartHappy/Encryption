@@ -21,6 +21,7 @@ import javax.crypto.spec.SecretKeySpec
  */
 sealed class CodecX {
 
+
     abstract fun e(@NotNull key: String, @NotNull password: String, initConfig: Config): String
 
     abstract fun d(@NotNull key: String, @NotNull encrypted: String, initConfig: Config): String
@@ -53,10 +54,20 @@ sealed class CodecX {
         @JvmStatic fun ef(file: File): String {
             return md5FileEncode(file)
         }
+
+        @JvmStatic infix fun encode(text: String): String {
+            return md5Encode(text)
+        }
+
+        @JvmStatic infix fun encodeFile(file: File): String {
+            return md5FileEncode(file)
+        }
     }
 
 
     companion object {
+
+        val defaultConfig: Config by lazy { Config() }
 
         private fun encode(algorithm: Algorithm, c: Config, key: String, password: String): String {
             try {
