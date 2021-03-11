@@ -69,11 +69,13 @@
             style="@style/style_title"
             android:text="偏移量:" />
 
-        <Spinner
-            android:id="@+id/spOffset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/offset" />
+       <EditText
+           android:id="@+id/etOffset"
+           android:text="UdA9vmPK55fZJBOv"
+           android:hint="偏移量可为空或为16位数的字符组成"
+           android:background="@null"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -115,6 +117,7 @@
         android:id="@+id/etKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="UdA9vmPK55fZJBOv"
         android:hint="请输入密钥"
         app:layout_constraintTop_toBottomOf="@+id/llCharacterSet" />
 
@@ -123,6 +126,7 @@
         android:id="@+id/etContent"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:text="422291e6c7e03580c8e4ff440f2958dc690c6c9925585bb8b94163a43af36b285d99390740bf68243da5fb8eed0ed1edf0b91ec94f598435028c399437e436b41d76cd2b099c769ba696882b3d9c0d0fcd4351f45a450fc86e05fb4136a7aa2d76ad4b28d2e93913ce37f3377ab8f3ff09a1675f762277bd8d30bf943c5e26c27084bd5989fdc2fdb22683ae2f0190aab81fafdee1aa97b9b5590614485817e9157a9c64335ba7fb20ad155e6afa9a128e244e3c3c2f2e56c3b8df1eb6ec9141e6742050aa61e45d4245bfd70ad6b531273ea7cec32f88d32c262ef12e2600f9ed89f11381433f88cab3db6611e82cd1d8a29ce02b8ff5a1e1b1139effb5a452455da7cd7485d3106a93490ccb149b78ac636431007f1eddffd29fe80bf391cd73799e0fa6885ca194cddf205bb3802b04dd746f3f6231c22ce5f9f5db74c147bfb81db6e083ce7931a8ce50f34b219ae1bd63b5102ea2d267be438bbc1d304d1ee40057b2e95baf4bd5f70da01383350b0e21d37e7dfe41b88d9eda63b78ee507c3b97e4e1b03130a55ae8de8c86f4fe082e66f70ba52f518cc72394bb5f24939837538c9db616caec2b5eb93ea249581f7301cf4dd4e7637b56587c159e1d5ad93efb695b1ce247fb0fd33d3015c625348bfa6b4ac9178e9dd4dbd4b41a76e60cf92e10c6cf5d7652686c1baf7b9e75adfcec5d0b4e770c5372208c153108cbdc6a5c648bf3f5683ab73d6f9a212024cf9b78beb71fea24ec4848065616791bfa8b4daa00421a4b00cdb692831c6267cfe2220e04a08121add4d2ad2e4b22c0a342dd9219b619bc94740eaad4cba8bd110347b127e8dfb2253f35dcde0719019cd33335dcc79bba35161b7f2212086c748d8800b18bde7814048da9c089a87"
         android:hint="请输入加密或解密内容"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

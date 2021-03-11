@@ -72,8 +72,8 @@ sealed class CodecX {
         private fun encode(algorithm: Algorithm, c: Config, key: String, password: String): String {
             try {
                 //iv:偏移量
-                val iv = if (c.offset != Offset.NotOffset) {
-                    IvParameterSpec(offset(c.offset.ti()).toByteArray(Charset.forName(c.characterSet.ts())))
+                val iv = if (c.offset.isNotBlank()) {
+                    IvParameterSpec(verOffset(c.offset).toByteArray(Charset.forName(c.characterSet.ts())))
                 } else {
                     null
                 }
@@ -98,8 +98,8 @@ sealed class CodecX {
             try {
                 var iv: IvParameterSpec? = null
                 val keySpec = generateKey(algorithm, key)
-                if (c.offset != Offset.NotOffset) {
-                    iv = IvParameterSpec(offset(c.offset.ti()).toByteArray(Charset.forName(c.characterSet.ts())))
+                if (c.offset.isNotBlank()) {
+                    iv = IvParameterSpec(verOffset(c.offset).toByteArray(Charset.forName(c.characterSet.ts())))
                 }
                 val cipher = Cipher.getInstance("${algorithm.ts()}/${c.encryptionMode.ts()}/${c.padding.ts()}")
 
@@ -139,17 +139,11 @@ sealed class CodecX {
         /**
          * 偏移量：传入16的倍数或16
          */
-        private fun offset(offset: Int): String {
-            if (offset < 16) {
+        private fun verOffset(offset: String): String {
+            if (offset.length in 1..15) {
                 throw InterruptedException("Minimum offset: 16 bytes in length")
-            } else if (offset % 16 != 0) {
-                throw InterruptedException("The offset must be a multiple of 16")
             }
-            val sb = StringBuffer()
-            for (i in 0 until offset) {
-                sb.append("0")
-            }
-            return sb.toString()
+            return offset
         }
 
         /**

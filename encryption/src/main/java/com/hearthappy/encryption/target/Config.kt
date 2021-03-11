@@ -8,7 +8,7 @@ package com.hearthappy.encryption.target
 class Config(
     var encryptionMode: EncryptionMode = EncryptionMode.CBC,
     var padding: Padding = Padding.PKCS5PADDING,
-    var offset: Offset = Offset.Offset16,
+    var offset: String="0000000000000000",
     var output: Output = Output.Hex,
     var characterSet: CharacterSet = CharacterSet.UTF_8
 )
