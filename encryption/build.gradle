@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'com.github.dcendents.android-maven'
 }
 
 java {
@@ -11,4 +12,29 @@ java {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.java.files
+}
+
+/*task javadoc(type: Javadoc) {
+    source = sourceSets.main.java.files
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}*/
+
+/*task classesJar(type: Jar) {
+    from "$buildDir/intermediates/classes/release"
+}*/
+
+artifacts {
+//    archives classesJar
+//    archives javadocJar
+    archives sourcesJar
 }
