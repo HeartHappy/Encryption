@@ -1,13 +1,17 @@
 package com.hearthappy.encryption
 
-import com.hearthappy.encryption.annotations.*
+
+import com.hearthappy.encryption.target.Algorithm
+import com.hearthappy.encryption.target.CharacterSet
+import com.hearthappy.encryption.target.Config
+import com.hearthappy.encryption.target.Output
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.codec.binary.Hex
+import org.apache.commons.codec.digest.DigestUtils
 import org.jetbrains.annotations.NotNull
+import java.io.File
 import java.nio.charset.Charset
 import java.security.Key
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
@@ -15,134 +19,136 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * Created Date 2020/12/2.
+ * Created Date 2021/1/12.
  * @author ChenRui
- * ClassDescription:支持AES、DES
+ * ClassDescription:加解密
  */
-class Codec {
-    companion object {
-        @Algorithm
-        private var algorithm = Algorithm.AES //加密算法
-        private var encryptionMode = EncryptionMode.CBC //加密模式
-        private var filling = Filling.PKCS5PADDING //填充
-        private var offset = Offset._16 //偏移量
-        private var output = Output.HEX //输出类型
-        private var characterSet = CharacterSet.UTF_8  //字符集
+sealed class CodecX {
 
-        @NotNull
-        @JvmStatic
-        fun config(
-            @Algorithm algorithm: String,
-            @EncryptionMode
-            encryptionMode: String,
-            @NotNull
-            @Filling
-            filling: String,
-            @NotNull
-            @Offset
-            offset: Int,
-            @NotNull
-            @Output
-            output: String,
-            @CharacterSet
-            characterSet: String
-        ): Companion {
-            Companion.algorithm = algorithm
-            Companion.encryptionMode = encryptionMode
-            Companion.filling = filling
-            Companion.offset = offset
-            Companion.output = output
-            Companion.characterSet = characterSet
-            return this
+
+    abstract fun e(@NotNull key: String, @NotNull password: String, initConfig: Config): String
+
+    abstract fun d(@NotNull key: String, @NotNull encrypted: String, initConfig: Config): String
+
+    object AES : CodecX() {
+        override fun e(key: String, password: String, initConfig: Config): String {
+            return encode(Algorithm.AES, initConfig, key, password)
         }
 
-        @JvmStatic
-        fun encode(@NotNull key: String, @NotNull password: String): String {
+        override fun d(key: String, encrypted: String, initConfig: Config): String {
+            return decode(Algorithm.AES, initConfig, key, encrypted)
+        }
+    }
+
+    object DES : CodecX() {
+        override fun e(key: String, password: String, initConfig: Config): String {
+            return encode(Algorithm.DES, initConfig, key, password)
+        }
+
+        override fun d(key: String, encrypted: String, initConfig: Config): String {
+            return decode(Algorithm.DES, initConfig, key, encrypted)
+        }
+    }
+
+    object MD5 {
+        @JvmStatic fun e(text: String): String {
+            return md5Encode(text)
+        }
+
+        @JvmStatic fun ef(file: File): String {
+            return md5FileEncode(file)
+        }
+
+        @JvmStatic infix fun encode(text: String): String {
+            return md5Encode(text)
+        }
+
+        @JvmStatic infix fun encodeFile(file: File): String {
+            return md5FileEncode(file)
+        }
+    }
+
+
+    companion object {
+
+        val defaultConfig: Config by lazy { Config() }
+
+        private fun encode(algorithm: Algorithm, c: Config, key: String, password: String): String {
             try {
                 //iv:偏移量
-                val iv = if (offset != Offset.default) {
-                    IvParameterSpec(
-                        offset(
-                            offset
-                        ).toByteArray(Charset.forName(CharacterSet.UTF_8))
-                    )
+                val iv = if (c.offset.isNotBlank()) {
+                    IvParameterSpec(verOffset(c.offset).toByteArray(Charset.forName(c.characterSet.ts())))
                 } else {
                     null
                 }
                 //通过工厂生成key
-                val keyFactory =
-                    generateKey(key)
-                val cipher = Cipher.getInstance("$algorithm/$encryptionMode/$filling")
+                val keyFactory = generateKey(algorithm, key)
+                val cipher = Cipher.getInstance("${algorithm.ts()}/${c.encryptionMode.ts()}/${c.padding.ts()}")
                 iv?.let {
                     cipher.init(Cipher.ENCRYPT_MODE, keyFactory, iv)
                 } ?: let {
                     cipher.init(Cipher.ENCRYPT_MODE, keyFactory)
                 }
-                if (output == Output.BASE64) {
-                    return encodeBase64ToString(
-                        cipher.doFinal(password.toByteArray())
-                    )
+                if (c.output == Output.Base64) {
+                    return encodeBase64ToString(cipher.doFinal(password.toByteArray()))
                 }
                 return String(Hex.encodeHex(cipher.doFinal(password.toByteArray())))
             } catch (ex: Exception) {
-                return "解析错误：$ex"
+                return "解析错误:$ex"
             }
         }
 
-        @JvmStatic
-        fun decode(@NotNull key: String, @NotNull encrypted: String): String {
+        private fun decode(algorithm: Algorithm, c: Config, key: String, encrypted: String): String {
             try {
                 var iv: IvParameterSpec? = null
-                val keySpec =
-                    generateKey(key)
-                if (offset != Offset.default) {
-                    iv =
-                        IvParameterSpec(
-                            offset(
-                                offset
-                            ).toByteArray(Charset.forName(CharacterSet.UTF_8))
-                        )
+                val keySpec = generateKey(algorithm, key)
+                if (c.offset.isNotBlank()) {
+                    iv = IvParameterSpec(verOffset(c.offset).toByteArray(Charset.forName(c.characterSet.ts())))
                 }
-
-                val cipher = Cipher.getInstance("$algorithm/$encryptionMode/$filling")
+                val cipher = Cipher.getInstance("${algorithm.ts()}/${c.encryptionMode.ts()}/${c.padding.ts()}")
 
                 iv?.let {
                     cipher.init(Cipher.DECRYPT_MODE, keySpec, iv)
                 } ?: let {
                     cipher.init(Cipher.DECRYPT_MODE, keySpec)
                 }
-                if (output == Output.BASE64) {
-                    return String(
-                        cipher.doFinal(
-                            decodeBase64ToBytes(
-                                encrypted
-                            )
-                        )
-                    )
+                if (c.output == Output.Base64) {
+                    return String(cipher.doFinal(decodeBase64ToBytes(encrypted)))
                 }
                 return String(cipher.doFinal(Hex.decodeHex(encrypted.toCharArray())))
             } catch (ex: Exception) {
-                return "解析错误：$ex"
+                return "解析错误:$ex"
             }
         }
 
+        private fun md5Encode(text: String): String {
+            return try {
+                DigestUtils.md5Hex(text)
+            } catch (e: Exception) {
+                "解析错误:$e"
+            }
+        }
+
+        private fun md5FileEncode(file: File): String {
+            if (!file.exists() || !file.isFile) {
+                return "解析错误:文件不存在"
+            }
+            return try {
+                DigestUtils.md5Hex(file.readBytes())
+            } catch (e: Exception) {
+                "解析错误:$e"
+            }
+        }
 
         /**
          * 偏移量：传入16的倍数或16
          */
-        private fun offset(@Offset offset: Int): String {
-            if (offset < 16) {
+        private fun verOffset(offset: String): String {
+            if (offset.length in 1..15) {
                 throw InterruptedException("Minimum offset: 16 bytes in length")
-            } else if (offset % 16 != 0) {
-                throw InterruptedException("The offset must be a multiple of 16")
             }
-            val sb = StringBuffer()
-            for (i in 0 until offset) {
-                sb.append("0")
-            }
-            return sb.toString()
+            return offset
         }
-
 
         /**
          * 输出Base64：加密字节数组并转为base64字符串
@@ -151,7 +157,6 @@ class Codec {
             return String(Base64.encodeBase64(bytes))
         }
 
-
         /**
          * 输出Base64：解析Base64字符串并转换为字节
          */
@@ -159,52 +164,15 @@ class Codec {
             return Base64.decodeBase64(data.toByteArray())
         }
 
-        private fun generateKey(key: String): Key {
-            when (algorithm) {
+        private fun generateKey(algorithm: Algorithm, key: String): Key {
+            return when (algorithm) {
                 Algorithm.AES -> {
-                    return SecretKeySpec(
-                        key.toByteArray(Charset.forName(CharacterSet.UTF_8)),
-                        algorithm
-                    )
+                    SecretKeySpec(key.toByteArray(Charset.forName(CharacterSet.UTF_8.ts())), algorithm.ts())
                 }
                 Algorithm.DES -> {
-                    return SecretKeyFactory.getInstance(algorithm)
-                        .generateSecret(DESKeySpec(key.toByteArray()))
-                }
-                else -> {
-                    return SecretKeySpec(
-                        key.toByteArray(Charset.forName(CharacterSet.UTF_8)),
-                        algorithm
-                    )
+                    SecretKeyFactory.getInstance(algorithm.ts()).generateSecret(DESKeySpec(key.toByteArray()))
                 }
             }
-        }
-
-
-        fun md5Encryption(text: String): String {
-            try {
-                //获取md5加密对象
-                val instance: MessageDigest = MessageDigest.getInstance("MD5")
-                //对字符串加密，返回字节数组
-                val digest: ByteArray = instance.digest(text.toByteArray())
-                val sb = StringBuffer()
-                for (b in digest) {
-                    //获取低八位有效值
-                    val i: Int = b.toInt() and 0xff
-                    //将整数转化为16进制
-                    var hexString = Integer.toHexString(i)
-                    if (hexString.length < 2) {
-                        //如果是一位的话，补0
-                        hexString = "0" + hexString
-                    }
-                    sb.append(hexString)
-                }
-                return sb.toString()
-
-            } catch (e: NoSuchAlgorithmException) {
-                e.printStackTrace()
-            }
-            return ""
         }
     }
 }
