@@ -23,14 +23,14 @@ import javax.crypto.spec.SecretKeySpec
  * @author ChenRui
  * ClassDescription:加解密
  */
-sealed class CodecX {
+sealed class Codec {
 
 
     abstract fun e(@NotNull key: String, @NotNull password: String, initConfig: Config): String
 
     abstract fun d(@NotNull key: String, @NotNull encrypted: String, initConfig: Config): String
 
-    object AES : CodecX() {
+    object AES : Codec() {
         override fun e(key: String, password: String, initConfig: Config): String {
             return encode(Algorithm.AES, initConfig, key, password)
         }
@@ -40,7 +40,7 @@ sealed class CodecX {
         }
     }
 
-    object DES : CodecX() {
+    object DES : Codec() {
         override fun e(key: String, password: String, initConfig: Config): String {
             return encode(Algorithm.DES, initConfig, key, password)
         }

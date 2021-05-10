@@ -31,16 +31,16 @@ class MainActivity : AppCompatActivity() {
             val result = when (tvAlgorithm.text.toString()) {
                 Algorithm.AES.ts() -> {
                     if (isEncode) {
-                        CodecX.AES.e(key, content, getConfig())
+                        Codec.AES.e(key, content, getConfig())
                     } else {
-                        CodecX.AES.d(key, content, getConfig())
+                        Codec.AES.d(key, content, getConfig())
                     }
                 }
                 else -> {
                     if (isEncode) {
-                        CodecX.DES.e(key, content, getConfig())
+                        Codec.DES.e(key, content, getConfig())
                     } else {
-                        CodecX.DES.d(key, content, getConfig())
+                        Codec.DES.d(key, content, getConfig())
                     }
                 }
             }
