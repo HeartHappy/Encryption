@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'java'
     id 'maven-publish'
 }
 
@@ -21,6 +22,11 @@ publishing {
             artifactId = 'library'
             version = '1.0.3'
             from components.java
+            versionMapping {
+                usage('java-runtime'){
+                    fromResolutionResult()
+                }
+            }
         }
     }
 }
