@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
     id 'kotlin'
-    id 'java'
     id 'maven-publish'
 }
 
@@ -14,19 +13,19 @@ task sourceJar(type: Jar) {
     from(libsDirName)  //lib目录下的jar依赖
     archiveClassifier = "sources"
 }
+
+def javadocTask = task javadocJar(type: Jar) {
+    archiveClassifier.set("javadoc")
+    classifier = "javadoc"
+}
 publishing {
     publications {
         maven(MavenPublication) {
-            artifact sourceJar
+            artifact javadocTask
             groupId = 'com.hearthappy.encryption'
             artifactId = 'library'
             version = '1.0.3'
             from components.java
-            versionMapping {
-                usage('java-runtime'){
-                    fromResolutionResult()
-                }
-            }
         }
     }
 }
