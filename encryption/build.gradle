@@ -16,11 +16,11 @@ task sourceJar(type: Jar) {
 publishing {
     publications {
         maven(MavenPublication) {
+            artifact sourceJar
             groupId = 'com.hearthappy.encryption'
             artifactId = 'library'
             version = '1.0.3'
             from components.java
-            artifact sourceJar
         }
     }
 }
