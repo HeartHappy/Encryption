@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'java'
     id 'maven-publish'
 }
 
@@ -8,7 +9,11 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
-
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    from(libsDirName)  //lib目录下的jar依赖
+    archiveClassifier = "sources"
+}
 publishing {
     publications {
         maven(MavenPublication) {
@@ -16,6 +21,7 @@ publishing {
             artifactId = 'library'
             version = '1.0.3'
             from components.java
+            artifact sourceJar
         }
     }
 }
