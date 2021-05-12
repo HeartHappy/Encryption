@@ -1,35 +1,54 @@
 plugins {
     id 'java-library'
     id 'kotlin'
-    id 'maven-publish'
+//    id 'maven-publish'
+    id 'ivy-publish'
 }
-
+version = '1.2.0'
+group = 'com.hearthappy'
 repositories {
     mavenCentral()
 }
 
 java {
+    withJavadocJar()
+    withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
 }
-task sourceJar(type: Jar) {
+
+/*task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     from(libsDirName)  //lib目录下的jar依赖
     archiveClassifier = "sources"
 }
 
-def javadocTask = task javadocJar(type: Jar) {
+task javadocJar(type: Jar) {
     archiveClassifier.set("javadoc")
     classifier = "javadoc"
-}
+}*/
 publishing {
-    publications {
+    /*publications {
         maven(MavenPublication) {
-            artifact javadocTask
+            artifact sourceJar
             groupId = 'com.hearthappy.encryption'
             artifactId = 'library'
             version = '1.0.3'
             from components.java
+        }
+    }*/
+    repositories {
+        ivy {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = "${rootProject.buildDir}/repo"
+        }
+    }
+    publications {
+        ivy(IvyPublication) {
+            from components.java
+            descriptor.description {
+                text = providers.provider({ description })
+            }
         }
     }
 }
