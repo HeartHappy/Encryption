@@ -2,9 +2,10 @@ plugins {
     id 'java-library'
     id 'kotlin'
 //    id 'maven-publish'
-    id 'ivy-publish'
+//    id 'ivy-publish'
+    id 'maven'
 }
-version = '1.2.0'
+version = '1.2.1'
 group = 'com.hearthappy'
 repositories {
     mavenCentral()
@@ -27,8 +28,8 @@ task javadocJar(type: Jar) {
     archiveClassifier.set("javadoc")
     classifier = "javadoc"
 }*/
-publishing {
-    /*publications {
+/*publishing {
+    *//*publications {
         maven(MavenPublication) {
             artifact sourceJar
             groupId = 'com.hearthappy.encryption'
@@ -36,7 +37,7 @@ publishing {
             version = '1.0.3'
             from components.java
         }
-    }*/
+    }*//*
     repositories {
         ivy {
             // change to point to your repo, e.g. http://my.org/repo
@@ -51,7 +52,7 @@ publishing {
             }
         }
     }
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
