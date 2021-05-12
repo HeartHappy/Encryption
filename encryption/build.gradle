@@ -4,6 +4,10 @@ plugins {
     id 'maven-publish'
 }
 
+repositories {
+    mavenCentral()
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_7
     targetCompatibility = JavaVersion.VERSION_1_7
@@ -29,7 +33,9 @@ publishing {
         }
     }
 }
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation group: 'com.innoventsolutions.birt.runtime', name: 'org.apache.commons.codec_1.9.0.v20170208-1614', version: '4.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
